@@ -1,0 +1,24 @@
+.App {
+  margin: 0 2rem;
+}
+.navbar{
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; 
+}
+.logo{
+  color: antiquewhite;
+  margin:1rem;
+}
+.btn{
+  margin:1rem;
+  
+}
+.btn a{
+  text-decoration: none;
+}
+
+
+
+

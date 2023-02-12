@@ -1,0 +1,21 @@
+GET http://localhost:3001/posts/638240a2d3a0f0a67ec3e9d1
+
+###
+
+GET http://localhost:3001/posts
+
+###
+
+POST http://localhost:3001/posts
+Content-Type: application/json
+
+{
+    "title":"tteep",
+    "author":"ptettepali",
+    "content":"teet tee pee pee",
+    "tags":["teepu", "teepu", "teepu"]
+}
+
+###
+
+DELETE http://localhost:3001/posts/638240a2d3a0f0a67ec3e9d1
