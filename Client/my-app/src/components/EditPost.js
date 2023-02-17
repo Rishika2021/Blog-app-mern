@@ -64,7 +64,6 @@ const headers={
 
   return (
     <div>
-      edit
       <form onSubmit={onSubmit}>
       <label>
           Title:
