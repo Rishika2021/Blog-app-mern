@@ -9,16 +9,38 @@ const [posts, setPost]=useState([]);
  
 useEffect(()=>{
    axios.get('http://localhost:3001/posts').then((response)=>{
-      console.log(response.data)
-      setPost(response.data)
+      console.log(response)
+      if( response.data ) {
+         setPost(response.data)
+      }else{
+         setPost([])
+      } 
    })
    .catch(err=>{
       console.log(err)
    })
 },[])
 
+const searchPost= async(e)=>{
+   const searchValue=e.target.value;
+   await axios.get(`http://localhost:3001/posts?search=${searchValue}`).then((response)=>{
+      console.log(response.data)
+      setPost(response.data)
+   })
+   .catch(err=>{
+      console.log(err)
+   })
+}
+
   return (
     <div>
+      <div>
+         <input
+         type='search'
+         placeholder='Search Posts'
+         onChange={searchPost}
+         />
+      </div>
        {posts.map((post)=>{
         return (
           <div key={post._id}>

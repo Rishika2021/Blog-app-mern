@@ -5,12 +5,49 @@ const router= new express.Router()
 const Posts=require('../../models/Post')  
 
 //get all
-router.get('/posts' ,(req,res)=>{
-   Posts.find({}).then((posts)=>{
-     return res.status(201).send(posts)
-   }).catch((err)=>{
-    return res.status(500).send()
-   })
+router.get('/posts' ,async (req,res)=>{
+   const {search}=req.query;
+   console.log(req.query)
+  
+   if(search){
+    console.log(search)
+   await Posts.aggregate(
+      [
+        {
+          '$search': {
+            'index': 'default', 
+            'autocomplete': {
+              'query': search, 
+              'path': 'title'
+            }
+          }
+        }, {
+          '$limit': 5
+        }, {
+          '$project': {
+            '_id': 1, 
+            'title': 1, 
+            'author': 1, 
+            'createdAt': 1
+          }
+        }
+      ]
+    ).then((posts)=>{
+      console.log(posts)
+       return res.status(201).send(posts)
+    }).catch((err)=>{
+       return res.status(500).send(err.getMessage)
+    })
+   }else{
+    Posts.find({}).then((posts)=>{
+       console.log(posts)
+       return res.status(201).send(posts)
+    }).catch((err)=>{
+        console.log(err)
+        return res.status(500).send(err.getMessage)
+    })
+   }
+    
 })
 //get one
 router.get('/posts/:id' ,(req,res)=>{
