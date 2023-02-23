@@ -8,6 +8,7 @@ function CreatePost() {
     title:"",
     author:"",
     content:"",
+    // id:"",
   })
   const navigate=useNavigate();
 

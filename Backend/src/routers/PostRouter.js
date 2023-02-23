@@ -3,9 +3,10 @@ const express=require("express")
 const { ObjectId } = require('mongodb')
 const router= new express.Router()
 const Posts=require('../../models/Post')  
+const {protect}=require('../../middleware/AuthMiddleware')
 
 //get all
-router.get('/posts' ,async (req,res)=>{
+router.get('/posts' ,protect,async (req,res)=>{
    const {search}=req.query;
    console.log(req.query)
   
@@ -50,7 +51,7 @@ router.get('/posts' ,async (req,res)=>{
     
 })
 //get one
-router.get('/posts/:id' ,(req,res)=>{
+router.get('/posts/:id',protect ,(req,res)=>{
     const id=(req.params.id)
     Posts.findById(id).then((post)=>{
         if(!post){
@@ -62,10 +63,11 @@ router.get('/posts/:id' ,(req,res)=>{
     })
 })
 //create one
-router.post('/posts/new' ,async (req,res)=>{
+router.post('/posts/new' ,protect,async (req,res)=>{
     try{
-        const post= new Posts(req.body)
+        // const post= new Posts(req.body)
         // console.log(post)
+        const post=new Posts({...req.body , user : req.user.id})
         // console.log(req.body)
         await post.save().then(()=>{
           // console.log(post)
@@ -81,7 +83,7 @@ router.post('/posts/new' ,async (req,res)=>{
     }
 });
 //Update one
-router.patch('/posts/edit/:id' ,async (req,res)=>{
+router.patch('/posts/edit/:id' ,protect,async (req,res)=>{
     // const updates=Object.keys(req.body)
     // const newObj=JSON.parse(req.body)
     // console.log(newObj)
@@ -108,7 +110,7 @@ router.patch('/posts/edit/:id' ,async (req,res)=>{
     
 })
 //Delete one
-router.delete('/posts/:id' ,async (req,res)=>{
+router.delete('/posts/:id',protect ,async (req,res)=>{
     try{
         const post=await Posts.findByIdAndDelete({_id:req.params.id})
         if(!post){
