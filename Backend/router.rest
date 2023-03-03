@@ -10,9 +10,9 @@ POST http://localhost:3001/register
 Content-Type: application/json
 
 {
-    "username":"bbbbbbb",
-    "email":"bbbbb@abc",
-    "password":"bbbbbbb"
+    "username":"piyushtiwari",
+    "email":"piyushtiwari@abc",
+    "password":"mai chutiya hu"
 }
 
 ###
@@ -21,8 +21,8 @@ POST http://localhost:3001/login
 Content-Type: application/json
 
 {
-    "email":"ruppuus@abc",
-    "password":"ruppaliiis"
+    "email":"bbbbb@abc",
+    "password":"bbbbbbb"
 }
 
 ###
@@ -35,9 +35,9 @@ POST http://localhost:3001/posts
 Content-Type: application/json
 
 {
-    "title":"Focus",
-    "author":"Nimisha",
-    "content":"Deep Work HyperFocus",
+    "title":" React Tutorial",
+    "author":"Rishika",
+    "content":"React part 1 tutorial",
     "tags":["teepu", "teepu", "teep"]
 }
 

@@ -5,6 +5,7 @@ const mongoose=require("mongoose")
 const router=require('./routers/PostRouter')
 const userRouter=require('./routers/UserRouter')
 const cors=require('cors')
+var cookieParser = require('cookie-parser')
 // mongoose.connect(process.env.DATABASE_URL,{useNewUrlParser:true}, err=>{
 //     if(err){
 //         console.log(err)
@@ -29,6 +30,7 @@ app.use(cors(
 app.use(express.json())
 app.use(router)
 app.use(userRouter)
+app.use(cookieParser())
 app.listen(3001,()=>{
     console.log('server started')
 })

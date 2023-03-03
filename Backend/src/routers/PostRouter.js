@@ -2,7 +2,8 @@ require('mongodb')
 const express=require("express")
 const { ObjectId } = require('mongodb')
 const router= new express.Router()
-const Posts=require('../../models/Post')  
+const Posts=require('../../models/Post') 
+const User=require('../../models/User')  
 const {protect}=require('../../middleware/AuthMiddleware')
 
 //get all
@@ -67,7 +68,7 @@ router.post('/posts/new' ,protect,async (req,res)=>{
     try{
         // const post= new Posts(req.body)
         // console.log(post)
-        const post=new Posts({...req.body , user : req.user.id})
+        const post=new Posts({...req.body , user : req.user.id})      //linking user using req.user from middleware
         // console.log(req.body)
         await post.save().then(()=>{
           // console.log(post)
@@ -90,6 +91,19 @@ router.patch('/posts/edit/:id' ,protect,async (req,res)=>{
     // console.log(updates)
     console.log(req.body)
     const keys=Object.keys(req.body)
+    const user=await User.findById(req.user.id)
+    //check for user
+    if(!user){
+      res.status(401)
+      throw new Error('User not Found')
+    }
+    //make sure the logged in user matches the owner of post (because you can only update your own post)
+    const reqpost=await Posts.findById(req.params.id)
+    if(reqpost.user.toString()!=user.id){
+      return  res.status(403).send('User not Authorized to change this post')
+      // throw new Error('User not Authorized')
+    }
+
     // console.log(keys)
     const allowedUpdates=['title', 'author', 'content']
     const isValidOperation= keys.every((update)=>{
@@ -102,16 +116,29 @@ router.patch('/posts/edit/:id' ,protect,async (req,res)=>{
       const post= await Posts.findByIdAndUpdate(req.params.id, req.body, {new:true, runValidators:true})
       if(!post){
         return res.status(200).send('no post found')
-      } 
+      }   
       return res.status(200).send(post)
     }catch(e){
-       return res.status(500).send(e.getMessage())
+       return res.status(500).send(e.getMessage)
     }
     
 })
 //Delete one
 router.delete('/posts/:id',protect ,async (req,res)=>{
+  
     try{
+      const user=await User.findById(req.user.id)
+      //check for user
+      if(!user){
+        res.status(401)
+        throw new Error('User not Found')
+      }
+      //make sure the logged in user matches the owner of post (because you can only update your own post)
+      const reqpost=await Posts.findById(req.params.id)
+      if(reqpost.user.toString()!=user.id){
+        return  res.status(403).send('User not Authorized to change this post')
+        // throw new Error('User not Authorized')
+      }
         const post=await Posts.findByIdAndDelete({_id:req.params.id})
         if(!post){
           return res.status(400).send()

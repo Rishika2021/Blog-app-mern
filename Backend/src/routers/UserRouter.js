@@ -5,6 +5,7 @@ const userRouter= new express.Router()
 const User=require('../../models/User') 
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcrypt')
+const Posts=require('../../models/Post')  
 const {protect}=require('../../middleware/AuthMiddleware')
 
 userRouter.post('/register', async (req,res)=>{
@@ -27,7 +28,7 @@ userRouter.post('/register', async (req,res)=>{
     const salt=await bcrypt.genSalt(10)
     const hashedPassword=await bcrypt.hash(password,salt)
 
-    const newUser= User.create({
+    const newUser=await User.create({
         username,
         email,
         password:hashedPassword
@@ -45,7 +46,7 @@ userRouter.post('/register', async (req,res)=>{
         res.status(200)
         // .json({message:'Success'})
         .json({                  
-            _id:newUser.id,
+            _id:newUser._id,
             name:newUser.username,
             email:newUser.email,
             token:generateToken(newUser._id)
@@ -78,11 +79,14 @@ userRouter.post('/login', async (req,res)=>{
 })
 
 userRouter.get('/getme',protect, async (req,res)=>{
-    const{id,username,email}=await User.findById(req.user.id)
+    const{id,username,email}=await User.findById(req.user.id)  //finding the user that is logged in
+    const allposts=await Posts.find({user:req.user.id})        //getting all posts of the logged in user using req.user provided by middleware
+    console.log(allposts)
     res.status(200).json({
         _id:id,
         name:username,
-        email:email
+        email:email,
+        allPosts:allposts
      })
     // res.json({message:'This is me'})
 })
