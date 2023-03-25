@@ -14,7 +14,12 @@ const {id:postId}=useParams();
 const navigate=useNavigate();
 useEffect(()=>{
   async function fetchData(){   
-     const response = await axios.get(`http://localhost:3001/posts/${postId}`)
+     const response = await axios.get(`http://localhost:3001/posts/${postId}`,
+     { 
+      headers: {
+        "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+      }
+    })
      if(!response.data){
       const msg=`An error has occurred: ${response.statusText}`;
       window.alert(msg);
@@ -47,9 +52,14 @@ async function onSubmit(e){
     author:editPost.author,
     content:editPost.content,
 } 
-const headers={
-  'Content-Type': 'application/json'
-}
+// const headers={
+//   'Content-Type': 'application/json'
+// }
+ 
+ const headers= {
+  'Content-Type': 'application/json',
+    "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+  }
 // const editedArray=[editedPost.title,editedPost.author,editedPost.content] 
   // console.log(editedPost)
   await axios.patch(`http://localhost:3001/posts/edit/${postId}`,JSON.stringify(editedPost),{headers})

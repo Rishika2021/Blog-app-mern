@@ -8,7 +8,13 @@ function Home() {
 const [posts, setPost]=useState([]);
  
 useEffect(()=>{
-   axios.get('http://localhost:3001/posts').then((response)=>{
+   axios.get('http://localhost:3001/posts',
+   { 
+      headers: {
+        "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+      }
+    }
+   ).then((response)=>{
       console.log(response)
       if( response.data ) {
          setPost(response.data)
@@ -23,7 +29,10 @@ useEffect(()=>{
 
 const searchPost= async(e)=>{
    const searchValue=e.target.value;
-   await axios.get(`http://localhost:3001/posts?search=${searchValue}`).then((response)=>{
+   const options={
+           withCredentials: true 
+         }
+   await axios.get(`http://localhost:3001/posts?search=${searchValue}`,options).then((response)=>{
       console.log(response.data)
       setPost(response.data)
    })

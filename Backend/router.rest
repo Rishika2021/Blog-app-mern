@@ -10,9 +10,9 @@ POST http://localhost:3001/register
 Content-Type: application/json
 
 {
-    "username":"piyushtiwari",
-    "email":"piyushtiwari@abc",
-    "password":"mai chutiya hu"
+    "username":"Kit",
+    "email":"kit@abc",
+    "password":"kittt"
 }
 
 ###

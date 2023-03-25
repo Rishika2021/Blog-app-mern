@@ -20,10 +20,16 @@ function CreatePost() {
    async function onSubmit(e){
      e.preventDefault();
      const newPost={...createPost};
-     const headers={
-      'Content-Type': 'application/json'
-    }
-     await axios.post('http://localhost:3001/posts/new',newPost,headers)
+    //  const headers={
+    //   'Content-Type': 'application/json'
+    // }
+    
+      const headers= {
+        'Content-Type': 'application/json',
+        "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+      }
+    
+     await axios.post('http://localhost:3001/posts/new',newPost,{headers})
      .then((res)=>{
         console.log(res)
      }).catch((err)=>{

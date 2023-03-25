@@ -21,8 +21,8 @@ userRouter.post('/register', async (req,res)=>{
     if(takenUsername || takenemail){
         res.status(400)
         // console.log('Username or email already taken')
-        // res.json('Username or email already taken')
-        throw new Error('Username or email already taken')
+         res.json('Username or email already taken')
+        // throw new Error('Username or email already taken')
     }
     //Hash password
     const salt=await bcrypt.genSalt(10)
@@ -43,12 +43,18 @@ userRouter.post('/register', async (req,res)=>{
     //     // return res.status(400).send(e.getMessage())   
     //   })
     if(newUser){
+        // const token=await newUser.AuthToken()
+        // res.cookie("jwtoken", token, {
+        //     expires: new Date(Date.now() + 25892000),
+        //     httpOnly: true,
+        // });
         res.status(200)
         // .json({message:'Success'})
         .json({                  
             _id:newUser._id,
             name:newUser.username,
             email:newUser.email,
+            // token:token,
             token:generateToken(newUser._id)
         })
     }else{
@@ -60,16 +66,25 @@ userRouter.post('/register', async (req,res)=>{
 
 userRouter.post('/login', async (req,res)=>{
     const {email,password}=req.body
-
+     console.log('login req-'+ email + password)
     //check for user email
     const user= await User.findOne({email})
-    console.log(user)
+    // console.log('login user-'+ user)
+    // const token=await user.AuthToken()
+    // console.log('token '+ token)
+    // res.cookie("jwtoken", token, {
+    //     expires: new Date(Date.now() + 25892000),
+    //     httpOnly: true,
+    // });
+    // console.log(token)
+    // console.log(user)
     if(user && (await bcrypt.compare(password,user.password))){
-         res.json({
-            _id:user.id,
+         res.send({
+            _id:user._id,
             name:user.username,
             email:user.email,
             token:generateToken(user._id)
+            // token:token,
          })
         console.log('found user')
     }else{
@@ -78,7 +93,12 @@ userRouter.post('/login', async (req,res)=>{
     // res.json({message:'login '})
 })
 
+userRouter.get("/isUserAuth",protect, (req, res) => {
+    return res.json({isLoggedIn: true, user: req.user})
+})
+
 userRouter.get('/getme',protect, async (req,res)=>{
+    // console.log(req.user)
     const{id,username,email}=await User.findById(req.user.id)  //finding the user that is logged in
     const allposts=await Posts.find({user:req.user.id})        //getting all posts of the logged in user using req.user provided by middleware
     console.log(allposts)

@@ -10,7 +10,13 @@ function Post() {
   const navigate = useNavigate();
   
   useEffect(()=>{
-     axios.get(`http://localhost:3001/posts/${postId}`)
+     axios.get(`http://localhost:3001/posts/${postId}`,
+     { 
+      headers: {
+        "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+      }
+    }
+    )
      .then((response)=>{
         // console.log(response)
         seTOnePost(response.data)
@@ -21,7 +27,12 @@ function Post() {
   },[])
 
   const deletePost= async ()=>{
-    await axios.delete(`http://localhost:3001/posts/${postId}`);
+    await axios.delete(`http://localhost:3001/posts/${postId}`,
+    { 
+      headers: {
+        "Authorization" : `Bearer ${localStorage.getItem("token")}` 
+      }
+    });
     navigate('/');
   }
 

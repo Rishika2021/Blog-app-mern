@@ -4,6 +4,8 @@ import CreatePost from './components/CreatePost';
 import EditPost from './components/EditPost';
 import Home from './components/Home';
 import Post from './components/Post';
+import Register from './components/Register';
+import Login from './components/Login';
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path='/posts/:id' element={<Post/>}/>
             <Route path='/posts/new' element={<CreatePost/>}/>
             <Route path='/posts/edit/:id' element={<EditPost/>}/> 
+            <Route path='/register' element={<Register/>}/> 
+            <Route path='/login' element={<Login/>}/> 
           </Routes>  
        </BrowserRouter>
       </>

@@ -21,12 +21,19 @@ const db=mongoose.connection
 db.on('error',(err)=>console.error(err))
 db.once('open',()=>console.log('connected to db'))
 
-app.use(cors(
-    {
-       origin : "*",
-       methods : ["POST","GET","DELETE","PATCH"]
-    }
-))
+// app.use(cors(
+//     {
+//        origin : "*",
+//        methods : ["POST","GET","DELETE","PATCH"]
+//     }
+// ))
+const corsOptions = {
+    origin: true, //included origin as true
+    credentials: true, //included credentials as true
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json())
 app.use(router)
 app.use(userRouter)
