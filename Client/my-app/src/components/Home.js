@@ -56,6 +56,7 @@ const searchPost= async(e)=>{
             <div>
               <Link to={`/posts/${post._id}`} style={{ textDecoration: 'none' }}><h1>{post.title}</h1></Link> 
             </div>
+            <img src={`/uploads/${post.postImg}`} alt=''></img>
             <p>{post.author}- <span className='secondary-text'>{FormatDate(post.createdAt)}</span></p>
             <p>{post.content}</p> 
          </div>

@@ -9,10 +9,12 @@ const blogSchema=new mongoose.Schema({
         type:String,
         required:true,
     },
-    img:
+    postImg:
     {
         data: Buffer,
-        contentType: String
+        contentType: String,
+        type:String,
+        // required:true,
     },
     content:{
         type:String,

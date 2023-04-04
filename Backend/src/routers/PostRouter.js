@@ -3,8 +3,20 @@ const express=require("express")
 const { ObjectId } = require('mongodb')
 const router= new express.Router()
 const Posts=require('../../models/Post') 
-const User=require('../../models/User')  
+const User=require('../../models/User') 
+const multer=require('multer') 
 const {protect}=require('../../middleware/AuthMiddleware')
+
+const storage=multer.diskStorage({
+  destination:(req,file,callback)=>{
+    callback(null,"../Client/my-app/public/uploads/")
+    // callback(null,"./uploads")
+  },
+  filename:(req,file,callback)=>{
+    callback(null,file.originalname)
+  }
+})
+const upload=multer({storage:storage})
 
 //get all
 router.get('/posts' ,protect,async (req,res)=>{
@@ -64,11 +76,12 @@ router.get('/posts/:id',protect ,(req,res)=>{
     })
 })
 //create one
-router.post('/posts/new' ,protect,async (req,res)=>{
+router.post('/posts/new' ,protect, upload.single("postImg"), async (req,res)=>{
     try{
         // const post= new Posts(req.body)
         // console.log(post)
-        const post=new Posts({...req.body , user : req.user.id})      //linking user using req.user from middleware
+        console.log(req.file)
+        const post=new Posts({...req.body , user : req.user.id, postImg: req.file.originalname})      //linking user using req.user from middleware
         // console.log(req.body)
         await post.save().then(()=>{
           // console.log(post)
@@ -76,11 +89,11 @@ router.post('/posts/new' ,protect,async (req,res)=>{
         })
         .catch(e=>{
           console.log(e)
-          return res.status(400).send(e.getMessage())
-           
+          return res.status(400).send(e.getMessage())  
         })
     }catch(err){
-        return res.status(500).send(err)
+        console.log(err)
+        return res.status(501).send(err)
     }
 });
 //Update one
